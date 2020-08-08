@@ -1,0 +1,29 @@
+.EditList{
+    bottom: -25%;
+    left: 0;
+    background-color: #28c218;
+    padding: 20px;
+    width: 100%;
+    position: absolute;
+    color: #fff;
+    box-shadow: 0px 0px 10px #000;
+    transition: all 0.7s ease-in-out;
+}
+.EditList--visible{
+    bottom: 0;
+}
+.EditList .ui.input,
+.EditList .ui.dropdown{
+    width: 100%;
+    margin-bottom: 20px;
+}
+.EditList .ui.button{
+    background-color: #28c218;
+    border: 1px solid #f1f1f1;
+    color: #fff;
+    width: 48.9%;
+}
+.ui.button.cancel{
+    background-color: #d30f0f;
+    color: #fff;
+}

@@ -1,0 +1,74 @@
+.menu{
+    width: 100%;
+    color: #fff;
+}
+.menu__togler{
+    width: 100%;
+    padding: 20px;
+    margin-bottom: 20px;
+    background-color: #26c218;
+    font-size: 2rem;
+    transition: text-shadow 0.3s;
+    box-shadow: 0px 0px 5px #000;
+    cursor: pointer;
+}
+.menu__modal__header > i{
+    cursor: pointer;
+}
+.menu__togler span{
+    font-size: 1.8rem;
+}
+.menu__modal{
+    box-shadow: 0px 0px 5px #000;
+    text-align: center;
+    width: 50%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: -52%;
+    background-color: #26c218;
+    transition: all 0.7s ease-in-out;
+    z-index: 200;
+}
+.menu__modal__close{
+    float: right;
+}
+.menu__modal__header{
+    padding: 20px;
+    border-bottom: 2px solid #fff;
+    font-size: 1.8rem;
+}
+
+.menu__modal__content{
+    padding: 20px;
+    font-size: 1.2rem;
+}
+.menu__modal__content__list{
+    width: 100%;
+    margin-bottom: 10px;
+    text-align: left;
+    cursor: pointer;
+}
+.menu__modal__content__list .list__icon{
+    width: 18%;
+    float: left;
+}
+.menu__modal__content__list .list__name{
+    width: 90%;
+}
+
+.menu__modal--visible{
+    left: 0;
+}
+.menu__modal__addList{
+    width: 100%;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    padding: 20px;
+    border-top: 2px solid #fff;
+    font-size: 1.2rem;
+}
+.menu__modal__addList:hover{
+    text-shadow: 0px 0px 10px #000;
+}

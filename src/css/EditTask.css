@@ -1,0 +1,47 @@
+.EditTask{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #f1f1f1;
+    z-index: 1000;
+    display: none;
+}
+.EditTask--visible{
+    display: block;
+}
+.EditTask__header{
+    width: 100%;
+    padding: 20px;
+    margin-bottom: 20px;
+    background-color: #26c218;
+    font-size: 2rem;
+    transition: text-shadow 0.3s;
+    box-shadow: 0px 0px 5px #000;
+    color: #fff;
+}
+.EditTask__header span{
+    font-size: 1.8rem;
+}
+.EditTask__header i{
+    cursor: pointer;
+}
+.EditTask__content{
+    width: 90%;
+    margin: 0 auto;
+}
+.EditTask__content .ui.input,
+.EditTask__content .ui.dropdown{
+    width: 100%;
+    margin-bottom: 20px;
+}
+.EditTask__content .ui.button{
+    background-color: #26c218;
+    color: #fff;
+    width: 48.9%;
+}
+.ui.button.cancel{
+    background-color: #d30f0f;
+    color: #fff;
+}
