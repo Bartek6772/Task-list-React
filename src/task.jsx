@@ -7,10 +7,11 @@ const Task = props => {
         <div className="task">
             <input type="checkbox" name="checked" data-id={props.id} checked={props.checked} onChange={e => props.onCheck(props.id, {[e.target.name]: e.target.checked})} />
             <span className="task__name">{props.name}</span>
-            <span className="task__date">
+            <span className="task__prop">
                 {props.date}
             </span>
             <div className="task__icons">
+                <i className="icon sticky note" onClick={() => props.taskDetailsShow(props.id)}></i>
                 <i className="icon edit" onClick={() => props.onEditInit(props.id)}></i>
                 <i className="icon trash" onClick={() => props.onRemove(props.id)}></i>
             </div>

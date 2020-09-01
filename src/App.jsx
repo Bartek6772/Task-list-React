@@ -7,6 +7,7 @@ import Task from "./task";
 import Menu from "./Menu";
 import EditTask from "./EditTask";
 import EditList from "./EditList";
+import TaskDetails from "./TaskDetails";
 
 // todo PropsTypes w komponentach
 
@@ -15,17 +16,28 @@ class App extends Component {
         super();
         this.state = {
             tasks: [
-                // {id: 0, name: "programowanie", description: "zrobić tą aplikację", listId:0, date: "2020-07-31", checked: false},
-                // {id: 1, name: "kupno samochodu", description: "kupic nowy samochód", listId:1, date: "2020-08-19", checked: false},
+                
             ],
             lists: [
+                {id: -1, name: "Wszystkie"},
                 {id: 0, name: "domyślne"},
                 {id: 1, name: "osobiste"},
                 {id: 2, name: "praca"}
             ],
+
             EditTaskActive: false,
             EditListActive: false,
-            ActiveListId: 0,
+            ActiveListId: -1,
+            TaskDetailsActive: false,
+
+            activeTaskDetails:{
+                id: 0,
+                name: "",
+                description: "",
+                listId: 0,
+                date: "",
+                checked: false,
+            },
             editedTask:{
                 id: 0,
                 name: "",
@@ -40,23 +52,30 @@ class App extends Component {
             }
         }
         this.editTaskShow = this.editTaskShow.bind(this);
+        this.taskDetailsShow = this.taskDetailsShow.bind(this);
         this.handleEditInit = this.handleEditInit.bind(this);
         this.changeActiveList = this.changeActiveList.bind(this);
         this.handleEditEvent = this.handleEditEvent.bind(this);
         this.handleEditCancel = this.handleEditCancel.bind(this);
         this.handleSaveEvent = this.handleSaveEvent.bind(this);
         this.handelRemoveEvent = this.handelRemoveEvent.bind(this);
-
         this.editListShow = this.editListShow.bind(this);
         this.handleEditListCancel = this.handleEditListCancel.bind(this);
         this.handleSaveListEvent = this.handleSaveListEvent.bind(this);
+        this.handleRemoveListEvent = this.handleRemoveListEvent.bind(this);
         this.handleCheckEvent = this.handleCheckEvent.bind(this);
     }
 
     componentDidMount() {
-        const storageTasks = JSON.parse(localStorage.getItem("tasks")) || [];
-        const storageLists = JSON.parse(localStorage.getItem("lists")) || [{id: 0, name: "domyślne"}];
-        this.setState({ tasks: storageTasks, lists: storageLists });
+        this.setState(prevState => {
+            const storageTasks = JSON.parse(localStorage.getItem("tasks")) || prevState.tasks;
+            const storageLists = JSON.parse(localStorage.getItem("lists")) || prevState.lists;
+            return{
+                tasks: storageTasks,
+                lists: storageLists
+            }
+            
+        })
     }
 
     editTaskShow(){
@@ -66,9 +85,23 @@ class App extends Component {
     }
 
     editListShow(){
-        
         this.setState(prevState => {
             return {EditListActive: !prevState.EditListActive}
+        })
+    }
+
+    taskDetailsShow(id){
+        this.setState(prevState => {
+            let data = { id: uniqid(), name: "", description: "", date: "", listId: 0, checked: false}
+
+            if(id !== undefined){
+                data = { ...prevState.tasks.find(el => el.id === id) }
+            }
+            
+            return{
+                TaskDetailsActive: !prevState.TaskDetailsActive,
+                activeTaskDetails: data,
+            }
         })
     }
 
@@ -105,14 +138,14 @@ class App extends Component {
 
     handleEditCancel(){
         this.setState({
-            editedTask: {id: uniqid(), name: "", description: "", date: "", checked: false}
+            editedTask: {id: uniqid(), name: "", description: "", date: "", listId: 0, checked: false}
         });
         this.editTaskShow();
     }
 
     handleSaveEvent(){
         this.setState(prevState => {
-            const editedTaskExist  =prevState.tasks.find(
+            const editedTaskExist = prevState.tasks.find(
                 el => el.id === prevState.editedTask.id
             );
 
@@ -173,6 +206,16 @@ class App extends Component {
         this.editListShow();
     }
 
+    handleRemoveListEvent(id){
+        console.log(id)
+        if(id !== 0 && id !== -1){
+            this.setState(prevState => ({
+                lists: prevState.lists.filter(el => el.id !== id),
+            }), () => localStorage.setItem("lists", JSON.stringify(this.state.lists)))
+            console.log("Deleted list! List ID: " + id);
+        }
+    }
+
     handleCheckEvent(id, val){
         console.log(val);
         this.setState(prevState => ({
@@ -181,39 +224,40 @@ class App extends Component {
     }
 
     render(){
+        
         const tasks = this.state.tasks.map(el => {
-            if(el.listId === this.state.ActiveListId)
-            return(
-                <Task
-                    key={el.id}
-                    id={el.id}
-                    name={el.name} 
-                    description={el.description}
-                    date={el.date}
-                    checked={el.checked}
-                    onEditInit={id => this.handleEditInit(id)}
-                    onRemove={id => this.handelRemoveEvent(id)}
-                    onCheck={(id, val) => this.handleCheckEvent(id, val)}
-                />
-            ); else return "";
+            if (this.state.ActiveListId === -1 || el.listId === this.state.ActiveListId){
+                return(
+                    <Task
+                        key={el.id}
+                        id={el.id}
+                        name={el.name} 
+                        description={el.description}
+                        date={el.date}
+                        checked={el.checked}
+                        onEditInit={id => this.handleEditInit(id)}
+                        onRemove={id => this.handelRemoveEvent(id)}
+                        onCheck={(id, val) => this.handleCheckEvent(id, val)}
+                        taskDetailsShow={(id) => this.taskDetailsShow(id)}
+                    />
+                ); 
+            } else return "";
+            
         });
         return(
             <div className="app">
                 <Menu
                     lists={this.state.lists}
+                    removeList={id => this.handleRemoveListEvent(id)}
                     activeListId={this.state.ActiveListId}
                     onChangeList={id => this.changeActiveList(id)}
                     editListShow={() => this.editListShow()}
                 />
-                <EditTask
-                    active={this.state.EditTaskActive}
-                    onInputChange={val => this.handleEditEvent(val, 1)}
-                    onCancel={() => this.handleEditCancel()}
-                    editedTask={this.state.editedTask}
-                    lists={this.state.lists}
-                    onSave={() => this.handleSaveEvent()}
-                />
-                {tasks}
+                <div className="tasks-list">
+                    {tasks}
+                    
+                </div>
+                
                 <div className="app__addButton" onClick={() => this.editTaskShow()}>
                     <i className="icon plus"></i>
                 </div>
@@ -223,6 +267,20 @@ class App extends Component {
                     editedList={this.state.editedList}
                     onInputChange={val => this.handleEditEvent(val, 2)}
                     onSave={() => this.handleSaveListEvent()}
+                />
+                <EditTask
+                    active={this.state.EditTaskActive}
+                    onInputChange={val => this.handleEditEvent(val, 1)}
+                    onCancel={() => this.handleEditCancel()}
+                    editedTask={this.state.editedTask}
+                    lists={this.state.lists}
+                    onSave={() => this.handleSaveEvent()}
+                />
+                <TaskDetails
+                    active={this.state.TaskDetailsActive}
+                    onClose={() => this.taskDetailsShow()}
+                    list={this.state.lists.find(el => el.id === this.state.activeTaskDetails.listId)}
+                    activeTask={this.state.activeTaskDetails}
                 />
             </div>
         )

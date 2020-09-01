@@ -10,9 +10,10 @@ class EditTask extends Component{
 
     render(){
         const lists = this.props.lists.map(el => {
+            if(el.id !== -1)
             return(
                 <option key={el.id} value={el.id}>{el.name}</option>
-            );
+            ); else return "";
         })
         const EditTaskClass = this.props.active === true ? "EditTask EditTask--visible" : "EditTask";
         
@@ -40,6 +41,14 @@ class EditTask extends Component{
                             value={this.props.editedTask.date}
                             onChange={e => this.props.onInputChange({[e.target.name]: e.target.value})}
                         />
+                    </div>
+                    <div className="ui input textarea">
+                        <textarea
+                            rows="5"
+                            name="description"
+                            value={this.props.editedTask.description}
+                            onChange={e => this.props.onInputChange({ [e.target.name]: e.target.value })}
+                        ></textarea>
                     </div>
                     <select
                         className="ui dropdown"
