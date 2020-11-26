@@ -1,7 +1,6 @@
 ## Task List React
 
 Task List created in react using React and create-react-app;
-Current compilation: http://bb.wbr.pl/todo
 
 Your data are safe on your computer, so only you have access to it.
 
